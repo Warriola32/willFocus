@@ -1,4 +1,3 @@
-
 import { useMemo, useState } from "react";
 import CarViewer from "./CarViewer";
 
@@ -25,7 +24,7 @@ type Meetup = {
 };
 
 function App() {
-  const [selectedModel, setSelectedModel] = useState<ModelType>("sedan");
+  const [selectedModel, setSelectedModel] = useState<ModelType>("hatchback");
   const [viewMode, setViewMode] = useState<ViewMode>("exterior");
   const [search, setSearch] = useState("");
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
@@ -99,37 +98,34 @@ function App() {
       title: "Sunday Focus Meet",
       date: "April 14, 2026",
       place: "Tagaytay",
-      description:
-        "Coffee, rolling shots, sunset photos, and Ford Focus lineup.",
+      description: "Coffee, rolling shots, sunset photos, and Ford Focus lineup.",
     },
     {
       id: 2,
       title: "Batangas Night Cruise",
       date: "May 03, 2026",
       place: "Lipa City",
-      description:
-        "Sedan and hatchback owners meetup with mod showcase and convoy.",
+      description: "Sedan and hatchback owners meetup with mod showcase and convoy.",
     },
     {
       id: 3,
       title: "Interior Detail Session",
       date: "May 25, 2026",
       place: "Alabang",
-      description:
-        "Cabin detailing, accessories discussion, and photo session.",
+      description: "Cabin detailing, accessories discussion, and photo session.",
     },
   ];
 
   const filteredParts = useMemo(() => {
     return parts.filter((part) => {
-      const matchesModel =
-        part.model === "both" || part.model === selectedModel;
+      const matchesModel = part.model === "both" || part.model === selectedModel;
       const q = search.toLowerCase();
       const matchesSearch =
         part.name.toLowerCase().includes(q) ||
         part.category.toLowerCase().includes(q) ||
         part.location.toLowerCase().includes(q) ||
         part.serialNumber.toLowerCase().includes(q);
+
       return matchesModel && matchesSearch;
     });
   }, [parts, selectedModel, search]);
@@ -145,26 +141,14 @@ function App() {
   return (
     <>
       <style>{`
-        * {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-        }
-
-        html {
-          scroll-behavior: smooth;
-        }
-
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
           font-family: Inter, Arial, sans-serif;
           background: #05070b;
           color: #ffffff;
         }
-
-        a {
-          color: inherit;
-          text-decoration: none;
-        }
+        a { color: inherit; text-decoration: none; }
 
         .app {
           min-height: 100vh;
@@ -174,10 +158,7 @@ function App() {
             #05070b;
         }
 
-        .container {
-          width: min(1180px, 92%);
-          margin: 0 auto;
-        }
+        .container { width: min(1180px, 92%); margin: 0 auto; }
 
         .nav {
           position: sticky;
@@ -196,22 +177,16 @@ function App() {
           gap: 18px;
         }
 
-        .brand {
-          display: flex;
-          flex-direction: column;
-          gap: 3px;
-        }
-
         .brand small {
           color: #8fa8c6;
           letter-spacing: 0.14em;
           text-transform: uppercase;
           font-size: 11px;
+          display: block;
+          margin-bottom: 4px;
         }
 
-        .brand strong {
-          font-size: 18px;
-        }
+        .brand strong { font-size: 18px; }
 
         .nav-links {
           display: flex;
@@ -223,7 +198,7 @@ function App() {
 
         .hero {
           display: grid;
-          grid-template-columns: 1.15fr 0.85fr;
+          grid-template-columns: 1.05fr 0.95fr;
           gap: 28px;
           align-items: center;
           padding: 72px 0 50px;
@@ -290,242 +265,45 @@ function App() {
           border: 1px solid rgba(255,255,255,0.12);
         }
 
-        .btn:hover {
-          transform: translateY(-2px);
-        }
+        .btn:hover { transform: translateY(-2px); }
 
-        .hero-card,
         .panel,
         .card,
         .part-card,
         .meet-card,
-        .upload-box {
+        .upload-box,
+        .hero-side {
           background: rgba(255,255,255,0.05);
           border: 1px solid rgba(255,255,255,0.08);
           backdrop-filter: blur(14px);
           border-radius: 26px;
         }
 
-        .hero-card {
-          padding: 24px;
-          min-height: 420px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
+        .hero-side {
+          padding: 22px;
           box-shadow: 0 16px 50px rgba(0,0,0,0.28);
         }
 
-        .model-toggle {
+        .toggle-row {
           display: flex;
-          gap: 10px;
           flex-wrap: wrap;
+          gap: 12px;
+          margin-bottom: 18px;
         }
 
         .toggle-btn {
-          padding: 10px 16px;
+          padding: 12px 18px;
           border-radius: 999px;
           border: 1px solid rgba(255,255,255,0.1);
           background: rgba(255,255,255,0.06);
           color: white;
           cursor: pointer;
-          font-weight: 600;
+          font-weight: 700;
         }
 
         .toggle-btn.active {
           background: linear-gradient(90deg, #23c4ff, #007bff);
           color: #051119;
-        }
-
-        .car-preview {
-          margin-top: 20px;
-          border-radius: 24px;
-          min-height: 250px;
-          padding: 22px;
-          display: flex;
-          align-items: end;
-          justify-content: space-between;
-          background:
-            linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
-            radial-gradient(circle at top, rgba(0,153,255,0.20), transparent 40%),
-            #09111c;
-          overflow: hidden;
-          position: relative;
-        }
-
-        .car-shape {
-          width: 100%;
-          max-width: 360px;
-          height: 150px;
-          border-radius: 80px 80px 34px 34px;
-          background: linear-gradient(135deg, #0f1724, #263447 60%, #0d1320);
-          position: relative;
-          box-shadow: inset 0 6px 12px rgba(255,255,255,0.06);
-        }
-
-        .car-shape::before,
-        .car-shape::after {
-          content: "";
-          position: absolute;
-          bottom: -18px;
-          width: 72px;
-          height: 72px;
-          border-radius: 50%;
-          background: #0b0f16;
-          border: 10px solid #2c3a4f;
-        }
-
-        .car-shape::before {
-          left: 42px;
-        }
-
-        .car-shape::after {
-          right: 42px;
-        }
-
-        .sedan .car-shape {
-          clip-path: polygon(8% 70%, 16% 44%, 34% 28%, 56% 22%, 76% 30%, 89% 50%, 96% 68%, 100% 78%, 96% 88%, 6% 88%, 0% 80%);
-        }
-
-        .hatchback .car-shape {
-          clip-path: polygon(8% 70%, 16% 42%, 36% 24%, 58% 20%, 76% 30%, 88% 42%, 96% 66%, 100% 78%, 95% 88%, 6% 88%, 0% 80%);
-        }
-
-        .spec-box {
-          width: 170px;
-          padding: 14px;
-          border-radius: 18px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .spec-box h4 {
-          margin-bottom: 8px;
-          color: #87d2ff;
-        }
-
-        .spec-box p {
-          font-size: 13px;
-          line-height: 1.6;
-          color: #d6e1ee;
-        }
-
-        .section {
-          padding: 34px 0 22px;
-        }
-
-        .section-heading {
-          display: flex;
-          justify-content: space-between;
-          align-items: end;
-          gap: 20px;
-          margin-bottom: 22px;
-          flex-wrap: wrap;
-        }
-
-        .section-heading h2 {
-          font-size: 34px;
-          margin-bottom: 8px;
-        }
-
-        .section-heading p {
-          color: #aab7c7;
-          max-width: 760px;
-          line-height: 1.8;
-        }
-
-        .feature-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 18px;
-        }
-
-        .card {
-          padding: 22px;
-        }
-
-        .card h3 {
-          margin-bottom: 10px;
-          font-size: 21px;
-        }
-
-        .card p {
-          color: #b7c4d5;
-          line-height: 1.7;
-        }
-
-        .viewer-wrap {
-          display: grid;
-          grid-template-columns: 1.2fr 0.8fr;
-          gap: 20px;
-        }
-
-        .panel {
-          padding: 22px;
-        }
-
-        .viewer-box {
-          min-height: 360px;
-          border-radius: 22px;
-          padding: 20px;
-          background:
-            radial-gradient(circle at center, rgba(0,153,255,0.18), transparent 35%),
-            linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
-            #08111a;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-        }
-
-        .viewer-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-        .viewer-top h3 {
-          font-size: 24px;
-        }
-
-        .view-toggles {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-        }
-
-        .view-btn {
-          padding: 10px 14px;
-          border-radius: 12px;
-          border: 1px solid rgba(255,255,255,0.1);
-          background: rgba(255,255,255,0.06);
-          color: white;
-          cursor: pointer;
-          font-weight: 600;
-        }
-
-        .view-btn.active {
-          background: linear-gradient(90deg, #2ec7ff, #007bff);
-          color: #04111b;
-        }
-
-        .viewer-stage {
-          flex: 1;
-          min-height: 220px;
-          display: grid;
-          place-items: center;
-          text-align: center;
-          padding: 20px;
-        }
-
-        .viewer-stage h4 {
-          font-size: 34px;
-          margin-bottom: 8px;
-        }
-
-        .viewer-stage p {
-          color: #c1cddd;
-          line-height: 1.8;
-          max-width: 460px;
         }
 
         .mini-stats {
@@ -554,6 +332,63 @@ function App() {
           line-height: 1.6;
         }
 
+        .section { padding: 34px 0 22px; }
+
+        .section-heading {
+          display: flex;
+          justify-content: space-between;
+          align-items: end;
+          gap: 20px;
+          margin-bottom: 22px;
+          flex-wrap: wrap;
+        }
+
+        .section-heading h2 {
+          font-size: 34px;
+          margin-bottom: 8px;
+        }
+
+        .section-heading p {
+          color: #aab7c7;
+          max-width: 760px;
+          line-height: 1.8;
+        }
+
+        .feature-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 18px;
+        }
+
+        .card { padding: 22px; }
+        .card h3 { margin-bottom: 10px; font-size: 21px; }
+        .card p { color: #b7c4d5; line-height: 1.7; }
+
+        .viewer-wrap {
+          display: grid;
+          grid-template-columns: 1.2fr 0.8fr;
+          gap: 20px;
+        }
+
+        .panel { padding: 22px; }
+
+        .viewer-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 16px;
+          flex-wrap: wrap;
+          margin-bottom: 18px;
+        }
+
+        .viewer-top h3 { font-size: 24px; margin-bottom: 12px; }
+
+        .view-toggles {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
         .parts-tools {
           display: flex;
           gap: 14px;
@@ -578,9 +413,7 @@ function App() {
           gap: 18px;
         }
 
-        .part-card {
-          padding: 22px;
-        }
+        .part-card { padding: 22px; }
 
         .part-top {
           display: flex;
@@ -600,10 +433,7 @@ function App() {
           white-space: nowrap;
         }
 
-        .part-card h3 {
-          font-size: 21px;
-          margin-bottom: 10px;
-        }
+        .part-card h3 { font-size: 21px; margin-bottom: 10px; }
 
         .meta {
           display: grid;
@@ -630,9 +460,7 @@ function App() {
           font-weight: 700;
         }
 
-        .upload-box {
-          padding: 22px;
-        }
+        .upload-box { padding: 22px; }
 
         .upload-label {
           display: inline-block;
@@ -645,9 +473,7 @@ function App() {
           margin: 14px 0 18px;
         }
 
-        .upload-input {
-          display: none;
-        }
+        .upload-input { display: none; }
 
         .photo-grid {
           display: grid;
@@ -683,30 +509,11 @@ function App() {
           gap: 18px;
         }
 
-        .meet-card {
-          padding: 22px;
-        }
-
-        .meet-card h3 {
-          margin-bottom: 10px;
-          font-size: 22px;
-        }
-
-        .meet-card .date {
-          color: #83d3ff;
-          font-weight: 700;
-          margin-bottom: 6px;
-        }
-
-        .meet-card .place {
-          color: #cbd7e5;
-          margin-bottom: 12px;
-        }
-
-        .meet-card p {
-          color: #aebccd;
-          line-height: 1.8;
-        }
+        .meet-card { padding: 22px; }
+        .meet-card h3 { margin-bottom: 10px; font-size: 22px; }
+        .meet-card .date { color: #83d3ff; font-weight: 700; margin-bottom: 6px; }
+        .meet-card .place { color: #cbd7e5; margin-bottom: 12px; }
+        .meet-card p { color: #aebccd; line-height: 1.8; }
 
         .footer {
           padding: 40px 0 70px;
@@ -720,22 +527,9 @@ function App() {
           .feature-grid,
           .part-grid,
           .meet-grid,
-          .photo-grid {
+          .photo-grid,
+          .mini-stats {
             grid-template-columns: 1fr;
-          }
-
-          .hero-card {
-            min-height: auto;
-          }
-
-          .car-preview {
-            flex-direction: column;
-            align-items: start;
-            gap: 18px;
-          }
-
-          .spec-box {
-            width: 100%;
           }
         }
 
@@ -759,13 +553,7 @@ function App() {
           .section-heading h2 {
             font-size: 28px;
           }
-
-          .viewer-stage h4 {
-            font-size: 28px;
-          }
         }
-
-        
       `}</style>
 
       <div className="app">
@@ -789,67 +577,70 @@ function App() {
         <main className="container">
           <section className="hero" id="home">
             <div>
-              <div className="pill">Car showcase + parts explorer + memories</div>
+              <div className="pill">Ford Focus showcase + parts explorer + memories</div>
               <h1>
                 <span className="gradient-text">Ford Focus Mk3.5</span>
                 <br />
-                2016
+                Titanium Portal
               </h1>
               <p>
-                A clean and premium website for your Ford Focus Mk3.5
-                sedan and hatchback. Explore car views, check parts and serial
-                numbers, upload your own photos, save shop links, and keep meetup
-                memories in one place.
+                A clean and premium website for your Ford Focus Mk3.5 sedan and hatchback.
+                Explore 3D views, check parts and serial numbers, upload your own photos,
+                save shop links, and preserve meetup memories.
               </p>
 
               <div className="hero-actions">
-                <a className="btn btn-primary" href="#garage">
-                  Explore Garage
-                </a>
-                <a className="btn btn-secondary" href="#parts">
-                  Open Parts Explorer
-                </a>
+                <a className="btn btn-primary" href="#garage">Explore Garage</a>
+                <a className="btn btn-secondary" href="#parts">Open Parts Explorer</a>
               </div>
             </div>
 
-            <div className={`hero-card ${selectedModel}`}>
-              <div>
-                <div className="model-toggle">
-                  <button
-                    className={`toggle-btn ${selectedModel === "sedan" ? "active" : ""}`}
-                    onClick={() => setSelectedModel("sedan")}
-                  >
-                    Sedan
-                  </button>
-                  <button
-                    className={`toggle-btn ${selectedModel === "hatchback" ? "active" : ""}`}
-                    onClick={() => setSelectedModel("hatchback")}
-                  >
-                    Hatchback
-                  </button>
-                </div>
-
-                <div className="car-preview">
-                  <div className="car-shape" />
-                  <div className="spec-box">
-                    <h4>{selectedModel === "sedan" ? "Sedan Build" : "Hatchback Build"}</h4>
-                    <p>
-                      {selectedModel === "sedan"
-                        ? "Elegant rear trunk line, premium  feel, and clean executive styling."
-                        : "Sportier rear profile, practical hatch access, and a more aggressive street look."}
-                    </p>
-                  </div>
-                </div>
+            <div className="hero-side">
+              <div className="toggle-row">
+                <button
+                  className={`toggle-btn ${selectedModel === "sedan" ? "active" : ""}`}
+                  onClick={() => setSelectedModel("sedan")}
+                >
+                  Sedan
+                </button>
+                <button
+                  className={`toggle-btn ${selectedModel === "hatchback" ? "active" : ""}`}
+                  onClick={() => setSelectedModel("hatchback")}
+                >
+                  Hatchback
+                </button>
+                <button
+                  className={`toggle-btn ${viewMode === "exterior" ? "active" : ""}`}
+                  onClick={() => setViewMode("exterior")}
+                >
+                  Exterior
+                </button>
+                <button
+                  className={`toggle-btn ${viewMode === "interior" ? "active" : ""}`}
+                  onClick={() => setViewMode("interior")}
+                >
+                  Interior
+                </button>
               </div>
+
+              <CarViewer modelName={selectedModel} viewMode={viewMode} />
 
               <div className="mini-stats">
                 <div className="mini-stat">
-                  <strong>Interior</strong>
-                  <span>Cabin section ready for dashboard, console, and seat details.</span>
+                  <strong>{selectedModel === "sedan" ? "Sedan Build" : "Hatchback Build"}</strong>
+                  <span>
+                    {selectedModel === "sedan"
+                      ? "Elegant rear trunk line and executive styling."
+                      : "Sportier rear profile with more aggressive street character."}
+                  </span>
                 </div>
                 <div className="mini-stat">
-                  <strong>Parts Access</strong>
-                  <span>Quick lookup for location, serial number, and buying links.</span>
+                  <strong>{viewMode === "exterior" ? "Exterior View" : "Interior View"}</strong>
+                  <span>
+                    {viewMode === "exterior"
+                      ? "Inspect shape, body line, lamps, wheels, and rear section."
+                      : "Inspect cabin layout, center console, dashboard, and seating area."}
+                  </span>
                 </div>
               </div>
             </div>
@@ -858,28 +649,16 @@ function App() {
           <section className="section">
             <div className="feature-grid">
               <div className="card">
-                <h3>3D Garage Ready</h3>
-                <p>
-                  The design is prepared for future 3D integration. For now, the
-                  page already works as an interactive showcase for exterior and
-                  interior views.
-                </p>
+                <h3>3D Garage</h3>
+                <p>Switch sedan and hatchback modes and inspect the car in an interactive viewer.</p>
               </div>
-
               <div className="card">
                 <h3>Parts Explorer</h3>
-                <p>
-                  Search parts by name, category, location, or serial number and
-                  keep direct links to trusted shops.
-                </p>
+                <p>Search by part name, serial number, category, or location with model-aware results.</p>
               </div>
-
               <div className="card">
                 <h3>Meetups & Memories</h3>
-                <p>
-                  Save your community events, convoy nights, road trips, and car
-                  stories in a premium memory wall.
-                </p>
+                <p>Keep owner events, cruises, detailing days, and car stories in one clean archive.</p>
               </div>
             </div>
           </section>
@@ -889,75 +668,49 @@ function App() {
               <div>
                 <h2>Garage Viewer</h2>
                 <p>
-                  This section acts as your interactive vehicle area. A real 3D
-                  model can be added later, but the structure is already complete
-                  for exterior and interior presentation.
+                  The main interactive section. Hatchback uses a real GLB model and sedan uses a custom 3D placeholder.
                 </p>
               </div>
             </div>
 
             <div className="viewer-wrap">
               <div className="panel">
-                <div className="viewer-box">
-                  <div className="viewer-top">
-  <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-    <h3>
-      {selectedModel === "sedan" ? "Sedan View" : "Hatchback View"}
-    </h3>
+                <div className="viewer-top">
+                  <div>
+                    <h3>{selectedModel === "sedan" ? "Sedan View" : "Hatchback View"}</h3>
+                    <div className="view-toggles">
+                      <button
+                        className={`toggle-btn ${selectedModel === "sedan" ? "active" : ""}`}
+                        onClick={() => setSelectedModel("sedan")}
+                      >
+                        Sedan
+                      </button>
+                      <button
+                        className={`toggle-btn ${selectedModel === "hatchback" ? "active" : ""}`}
+                        onClick={() => setSelectedModel("hatchback")}
+                      >
+                        Hatchback
+                      </button>
+                    </div>
+                  </div>
 
-    <div className="view-toggles">
-      <button
-        className={`view-btn ${selectedModel === "sedan" ? "active" : ""}`}
-        onClick={() => setSelectedModel("sedan")}
-      >
-        Sedan
-      </button>
-      <button
-        className={`view-btn ${selectedModel === "hatchback" ? "active" : ""}`}
-        onClick={() => setSelectedModel("hatchback")}
-      >
-        Hatchback
-      </button>
-    </div>
-  </div>
-
-  <div className="view-toggles">
-    <button
-      className={`view-btn ${viewMode === "exterior" ? "active" : ""}`}
-      onClick={() => setViewMode("exterior")}
-    >
-      Exterior
-    </button>
-    <button
-      className={`view-btn ${viewMode === "interior" ? "active" : ""}`}
-      onClick={() => setViewMode("interior")}
-    >
-      Interior
-    </button>
-  </div>
-</div>
-
-                  <div className="viewer-stage" style={{ display: "block", padding: 0 }}>
-  <CarViewer modelName={selectedModel} />
-  <div style={{ padding: "18px 6px 4px", textAlign: "center" }}>
-    <h4 style={{ fontSize: "30px", marginBottom: "8px" }}>
-      {viewMode === "exterior" ? "Exterior Walkaround" : "Interior Cabin Tour"}
-    </h4>
-    <p
-      style={{
-        color: "#c1cddd",
-        lineHeight: 1.8,
-        maxWidth: "540px",
-        margin: "0 auto",
-      }}
-    >
-      {viewMode === "exterior"
-        ? "Rotate the car model to inspect the body shape, front profile, side line, and rear section."
-        : "This starter version still uses the same 3D object, but your next upgrade can switch to a true interior model or cabin scene."}
-    </p>
-  </div>
-</div>
+                  <div className="view-toggles">
+                    <button
+                      className={`toggle-btn ${viewMode === "exterior" ? "active" : ""}`}
+                      onClick={() => setViewMode("exterior")}
+                    >
+                      Exterior
+                    </button>
+                    <button
+                      className={`toggle-btn ${viewMode === "interior" ? "active" : ""}`}
+                      onClick={() => setViewMode("interior")}
+                    >
+                      Interior
+                    </button>
+                  </div>
                 </div>
+
+                <CarViewer modelName={selectedModel} viewMode={viewMode} />
               </div>
 
               <div className="panel">
@@ -968,15 +721,15 @@ function App() {
                   </div>
                   <div className="mini-stat">
                     <strong>Current View</strong>
-                    <span>{viewMode === "exterior" ? "Exterior area" : "Interior area"}</span>
+                    <span>{viewMode === "exterior" ? "Exterior mode" : "Interior mode"}</span>
+                  </div>
+                  <div className="mini-stat">
+                    <strong>3D Source</strong>
+                    <span>{selectedModel === "sedan" ? "Custom placeholder model" : "Real GLB hatchback model"}</span>
                   </div>
                   <div className="mini-stat">
                     <strong>Best Use</strong>
-                    <span>Showcase trims, customizations, and owner reference details.</span>
-                  </div>
-                  <div className="mini-stat">
-                    <strong>Future Upgrade</strong>
-                    <span>Add Three.js or React Three Fiber for a real rotatable 3D model.</span>
+                    <span>Showcase trims, mods, body references, and future upgrades.</span>
                   </div>
                 </div>
               </div>
@@ -987,10 +740,7 @@ function App() {
             <div className="section-heading">
               <div>
                 <h2>Parts Explorer</h2>
-                <p>
-                  Search and view Ford Focus parts with category, location,
-                  serial number, description, and shop links.
-                </p>
+                <p>Search and view Ford Focus parts with category, location, serial number, description, and shop links.</p>
               </div>
             </div>
 
@@ -1039,11 +789,7 @@ function App() {
             <div className="section-heading">
               <div>
                 <h2>Your Car Gallery</h2>
-                <p>
-                  Upload real photos of your own Ford Focus. Great for front
-                  shots, rear profile, wheels, interior setup, mods, engine bay,
-                  and meetup moments.
-                </p>
+                <p>Upload real photos of your own Ford Focus for mods, details, wheels, interior, and meetups.</p>
               </div>
             </div>
 
@@ -1080,10 +826,7 @@ function App() {
             <div className="section-heading">
               <div>
                 <h2>Meetups & Memories</h2>
-                <p>
-                  Save special memories from cruises, owner meets, detailing
-                  sessions, and Ford Focus events.
-                </p>
+                <p>Save special memories from cruises, owner meets, detailing sessions, and Focus community events.</p>
               </div>
             </div>
 
@@ -1100,7 +843,7 @@ function App() {
           </section>
 
           <footer className="footer">
-            Ford Focus Mk3.5 2016 — Sedan & Hatchback Showcase
+            Ford Focus Mk3.5 Titanium Portal — Live Demo Build
           </footer>
         </main>
       </div>

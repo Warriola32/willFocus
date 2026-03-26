@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
   OrbitControls,
@@ -10,6 +10,7 @@ import {
 
 type CarViewerProps = {
   modelName: "sedan" | "hatchback";
+  viewMode: "exterior" | "interior";
 };
 
 function LoadingFallback() {
@@ -32,7 +33,38 @@ function LoadingFallback() {
   );
 }
 
-function SedanPlaceholder() {
+function SedanPlaceholder({ viewMode }: { viewMode: "exterior" | "interior" }) {
+  if (viewMode === "interior") {
+    return (
+      <group>
+        <mesh position={[0, 0.15, 0]} castShadow receiveShadow>
+          <boxGeometry args={[2.6, 0.25, 1.3]} />
+          <meshStandardMaterial color="#27374d" metalness={0.35} roughness={0.5} />
+        </mesh>
+
+        <mesh position={[-0.65, 0.45, 0]} castShadow>
+          <boxGeometry args={[0.45, 0.55, 1.0]} />
+          <meshStandardMaterial color="#4a5a70" />
+        </mesh>
+
+        <mesh position={[0.05, 0.45, 0]} castShadow>
+          <boxGeometry args={[0.45, 0.55, 1.0]} />
+          <meshStandardMaterial color="#4a5a70" />
+        </mesh>
+
+        <mesh position={[0.6, 0.32, 0]} castShadow>
+          <boxGeometry args={[0.35, 0.35, 0.6]} />
+          <meshStandardMaterial color="#39485e" />
+        </mesh>
+
+        <mesh position={[1.0, 0.52, 0]} castShadow>
+          <boxGeometry args={[0.55, 0.4, 1.0]} />
+          <meshStandardMaterial color="#5f6f86" />
+        </mesh>
+      </group>
+    );
+  }
+
   return (
     <group>
       <mesh position={[0, 0.2, 0]} castShadow receiveShadow>
@@ -73,28 +105,44 @@ function SedanPlaceholder() {
   );
 }
 
-function HatchbackReal() {
+function HatchbackReal({ viewMode }: { viewMode: "exterior" | "interior" }) {
   const { scene } = useGLTF("/models/2016_ford_focus_rs.glb");
+
+  const config = useMemo(() => {
+    if (viewMode === "interior") {
+      return {
+        scale: 1.1,
+        position: [0, -0.85, 0] as [number, number, number],
+        rotation: [0, Math.PI / 2, 0] as [number, number, number],
+      };
+    }
+
+    return {
+      scale: 1.15,
+      position: [0, -0.85, 0] as [number, number, number],
+      rotation: [0, Math.PI, 0] as [number, number, number],
+    };
+  }, [viewMode]);
 
   return (
     <primitive
-      object={scene}
-      scale={1.15}
-      position={[0, -0.85, 0]}
-      rotation={[0, Math.PI, 0]}
+      object={scene.clone()}
+      scale={config.scale}
+      position={config.position}
+      rotation={config.rotation}
     />
   );
 }
 
-function ModelSwitch({ modelName }: CarViewerProps) {
+function ModelSwitch({ modelName, viewMode }: CarViewerProps) {
   if (modelName === "sedan") {
-    return <SedanPlaceholder />;
+    return <SedanPlaceholder viewMode={viewMode} />;
   }
 
-  return <HatchbackReal />;
+  return <HatchbackReal viewMode={viewMode} />;
 }
 
-export default function CarViewer({ modelName }: CarViewerProps) {
+export default function CarViewer({ modelName, viewMode }: CarViewerProps) {
   return (
     <div
       style={{
@@ -115,7 +163,7 @@ export default function CarViewer({ modelName }: CarViewerProps) {
           <Environment preset="city" />
 
           <group position={[0, -0.2, 0]}>
-            <ModelSwitch modelName={modelName} />
+            <ModelSwitch modelName={modelName} viewMode={viewMode} />
           </group>
 
           <ContactShadows
